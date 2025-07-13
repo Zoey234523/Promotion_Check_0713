@@ -69,8 +69,11 @@ def process_data(df):
 
 # Main processing logic
 if uploaded_file is not None:
+    status_message = st.empty() # Create an empty placeholder
+    status_message.info("正在处理数据，请稍等...") # Display initial message in the placeholder
+
     try:
-        st.info("正在处理数据，请稍等...")
+        # st.info("正在处理数据，请稍等...")
         
         # Load the Excel file
         df = pd.read_excel(uploaded_file)
