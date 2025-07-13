@@ -82,25 +82,55 @@ if uploaded_file is not None:
         # Validate the data
         is_valid, error_message = validate_data(df)
         
+        # if is_valid:
+        #     # Process the data
+        #     results_df = process_data(df)
+            
+        #     # Display the results
+        #     st.subheader("处理结果预览")
+        #     st.dataframe(results_df)
+            
+        #     # Generate summary statistics
+        #     st.subheader("晋升结果统计")
+        #     promotion_counts = results_df['晋升结果'].value_counts()
+        #     st.bar_chart(promotion_counts)
+            
+        #     # Prepare the Excel file for download
+        #     output = io.BytesIO()
+        #     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        #         results_df.to_excel(writer, index=False)
+            
+        #     # Offer download button
+        #     st.download_button(
+        #         label="下载处理结果",
+        #         data=output.getvalue(),
+        #         file_name="晋升结果.xlsx",
+        #         mime="application/vnd.ms-excel"
+        #     )
         if is_valid:
             # Process the data
             results_df = process_data(df)
-            
+
             # Display the results
             st.subheader("处理结果预览")
             st.dataframe(results_df)
-            
+
             # Generate summary statistics
             st.subheader("晋升结果统计")
-            promotion_counts = results_df['晋升结果'].value_counts()
-            st.bar_chart(promotion_counts)
-            
+            # Ensure '晋升结果' column exists before calling value_counts
+            if '晋升结果' in results_df.columns:
+                promotion_counts = results_df['晋升结果'].value_counts()
+                st.bar_chart(promotion_counts)
+            else:
+                st.warning("处理结果中未找到'晋升结果'列，无法生成统计图表。")
+
             # Prepare the Excel file for download
             output = io.BytesIO()
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
                 results_df.to_excel(writer, index=False)
-            
-            # Offer download button
+
+            # --- Update the status message and offer download button ---
+            status_message.success("文件处理完成！") # Update the placeholder to "文件处理完成"
             st.download_button(
                 label="下载处理结果",
                 data=output.getvalue(),
